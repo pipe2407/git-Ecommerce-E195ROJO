@@ -2,6 +2,15 @@
 
 **Grupo Rojo** - E-commerce de Productos Tecnológicos
 
+**Integrantes **
+
+Daiber Arley Mantilla Carreño
+Juan Felipe Pinto Sandoval
+Víctor Ricardo Serpa Núñez
+Edilson Andrés Luna Herrera
+Brandon Dulian Gracias Suárez
+
+
 ## 📋 Descripción
 
 Este repositorio contiene un sitio web tipo e-commerce para la venta de productos tecnológicos. El proyecto está dividido en dos partes principales:
