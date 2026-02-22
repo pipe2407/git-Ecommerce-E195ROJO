@@ -9,6 +9,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: env.DB_URL,
+    url: "postgresql://postgres:admin@localhost:5433/tech_market?schema=public"
   },
 });

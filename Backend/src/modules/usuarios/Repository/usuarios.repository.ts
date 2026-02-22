@@ -1,12 +1,19 @@
 import { PrismaClientOptions } from "@prisma/client/runtime/client";
 import { PrismaClient } from "../../../generated/prisma/client";
 import { iCrearUsuario } from "../Models/usuarios.model";
+import { env } from "../../../config/env";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 export class UsuariosRepository {
     prismaClient: PrismaClient;
     
     constructor() {
-        this.prismaClient = new PrismaClient({} as any);
+        const pool = new Pool({
+            connectionString: env.DB_URL
+        });
+        const adapter = new PrismaPg(pool);
+        this.prismaClient = new PrismaClient({ adapter });
     }
 
     // Repositorio para crear usuario
