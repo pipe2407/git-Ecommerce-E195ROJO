@@ -7,17 +7,7 @@ export class UsuariosService {
     constructor() {
         this.usuariosRepository = new UsuariosRepository();
     }
-
-    // Servicio para registrar usuario
-    async registrarUsuario(data: any) {
-        try {
-            const resultado = await this.usuariosRepository.registrarUsuario(data);
-            return resultado;
-        } catch (error: any) {
-            throw new Error(error.message || "Error al registrar usuario en el servicio");
-        }
-    }
-
+    
     // Servicio para crear usuario
     async crearUsuario(data: iCrearUsuario) {
         try {

@@ -3,20 +3,6 @@ import { UsuariosService } from "../Services/usuarios.service";
 
 const usuariosService = new UsuariosService();
 
-// Función para registrar usuario
-export const registrarUsuario = async (request: Request, response: Response) => {
-    try {
-        // Llamar al servicio
-        const resultado = await usuariosService.registrarUsuario(request.body);
-        response.status(201).json(resultado);
-    } catch (error: any) {
-        response.status(500).json({ 
-            error: "Error al registrar usuario", 
-            mensaje: error.message || "Error interno del servidor" 
-        });
-    }
-};
-
 // Función para crear usuario
 export const crearUsuario = async (request: Request, response: Response) => {
     try {

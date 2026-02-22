@@ -9,16 +9,6 @@ export class UsuariosRepository {
         this.prismaClient = new PrismaClient({} as any);
     }
 
-    // Repositorio para registrar usuario
-    async registrarUsuario(data: any) {
-        try {
-            return { mensaje: "Usuario registrado", data };
-        } catch (error: any) {
-            console.log("error registrando usuario:" + error);
-            throw new Error('Error registrando el usuario.');
-        }
-    }
-
     // Repositorio para crear usuario
     async crearUsuario(data: iCrearUsuario) {
         try{
