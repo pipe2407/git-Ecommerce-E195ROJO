@@ -56,7 +56,7 @@ model roles_permiso {
 model usuarios {
   id                                                             Int                 @id @default(autoincrement())
   usuario_crea_fk                                                Int
-  usuario_modifica                                               Int
+  usuario_modifica_fk                                            Int
   fecha_crea                                                     DateTime            @default(now()) @db.Timestamp(6)
   fecha_modifica                                                 DateTime            @default(now()) @db.Timestamp(6)
   nombre_usuario                                                 String              @db.VarChar(30)
@@ -76,8 +76,8 @@ model usuarios {
   roles_permiso_roles_permiso_usuario_modificaTousuarios         roles_permiso[]     @relation("roles_permiso_usuario_modificaTousuarios")
   usuarios_usuarios_usuario_crea_fkTousuarios                    usuarios            @relation("usuarios_usuario_crea_fkTousuarios", fields: [usuario_crea_fk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_crea")
   other_usuarios_usuarios_usuario_crea_fkTousuarios              usuarios[]          @relation("usuarios_usuario_crea_fkTousuarios")
-  usuarios_usuarios_usuario_modificaTousuarios                   usuarios            @relation("usuarios_usuario_modificaTousuarios", fields: [usuario_modifica], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "usuario_modifica")
-  other_usuarios_usuarios_usuario_modificaTousuarios             usuarios[]          @relation("usuarios_usuario_modificaTousuarios")
+  usuarios_usuarios_usuario_modifica_fkTousuarios                usuarios            @relation("usuarios_usuario_modifica_fkTousuarios", fields: [usuario_modifica_fk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "usuario_modifica")
+  other_usuarios_usuarios_usuario_modifica_fkTousuarios          usuarios[]          @relation("usuarios_usuario_modifica_fkTousuarios")
   usuarios_permisos_usuarios_permisos_usuario_crea_fkTousuarios  usuarios_permisos[] @relation("usuarios_permisos_usuario_crea_fkTousuarios")
   usuarios_permisos_usuarios_permisos_usuario_fkTousuarios       usuarios_permisos[] @relation("usuarios_permisos_usuario_fkTousuarios")
   usuarios_permisos_usuarios_permisos_usuario_modificaTousuarios usuarios_permisos[] @relation("usuarios_permisos_usuario_modificaTousuarios")
