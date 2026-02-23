@@ -109,7 +109,7 @@ model usuarios_token {
   tipo                                               String   @db.VarChar(30)
   activo                                             Boolean  @default(true)
   ip_origen                                          String   @db.VarChar(30)
-  user_agent                                         String   @db.VarChar(20)
+  user_agent                                         String   @db.VarChar(80)
   fecha_expiracion                                   DateTime @db.Timestamp(6)
   usuario_modifica_fk                                Int
   usuarios_usuarios_token_usuario_crea_fkTousuarios  usuarios @relation("usuarios_token_usuario_crea_fkTousuarios", fields: [usuario_crea_fk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_crea")

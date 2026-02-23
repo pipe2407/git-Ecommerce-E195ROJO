@@ -1,7 +1,7 @@
 import { UsuariosRepository } from "../Repository/usuarios.repository";
 import { iCrearUsuario, iUsuario } from "../Models/usuarios.model";
 import { iLogin } from "../Models/usuarios.model";
-import { autenticarUsuario } from "../../Auth/Services/auth.service";
+import { autenticarUsuario, guardarTokenUsuario } from "../../Auth/Services/auth.service";
 import { iTokensAcceso } from "../../Auth/Models/auth.model";
 
 export class UsuariosService {
@@ -32,7 +32,7 @@ export class UsuariosService {
     }
 
     // Servicio para login de usuario
-    async loginUsuario(credentials: iLogin):Promise<iTokensAcceso> {
+    async loginUsuario(credentials: iLogin, ip:string, user_agent:string):Promise<iTokensAcceso> {
         try {
             //Consulta si el usuario existe en base de datos
             const usuario:iUsuario | null = await this.usuariosRepository.consultarUsuario(credentials.email);
@@ -40,6 +40,10 @@ export class UsuariosService {
                 throw new Error('Credenciales invalidas');
             }else{
                 const resultAutenticacion:iTokensAcceso = await autenticarUsuario(usuario, credentials.contrasena);
+                let fechaExpiracionToken:Date = new Date();
+                //Guardado del token de refresh en base de datos
+                await guardarTokenUsuario(usuario, resultAutenticacion.refreshToken, 'REFRESH', ip, user_agent, fechaExpiracionToken);
+
                 return resultAutenticacion;
             }
         } catch (error: any) {

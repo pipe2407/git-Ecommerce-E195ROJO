@@ -1,7 +1,7 @@
 import { prismaClient } from "../../../prisma/prisma.client";
 import { iUsuario } from "../../usuarios/Models/usuarios.model";
 
-export class UsuariosRepository {
+export class AuthRepository {
     prismaClient = prismaClient;
     
     constructor() {}

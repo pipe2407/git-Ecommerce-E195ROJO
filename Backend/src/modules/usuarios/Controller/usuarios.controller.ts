@@ -36,7 +36,14 @@ export const consultarUsuario = async (request: Request, response: Response) => 
 export const loginUsuario = async (request: Request, response: Response) => {
     try {
         // Llamar al servicio
-        const resultado:iTokensAcceso = await usuariosService.loginUsuario(request.body);
+        const ip =
+        request.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+        request.socket.remoteAddress ||
+        "unknown";
+
+        const user_agent: string = request.headers['user-agent']?.toString() || 'unknown';
+
+        const resultado:iTokensAcceso = await usuariosService.loginUsuario(request.body, ip , user_agent);
         response.status(200).json(resultado);
     } catch (error: any) {
         response.status(401).json({ 

@@ -3,7 +3,7 @@ import { SignOptions, sign } from "jsonwebtoken";
 import { iUsuario } from "../../usuarios/Models/usuarios.model";
 import { iTokensAcceso } from "../Models/auth.model";
 import { env } from "../../../config/env";
-
+import { AuthRepository } from "../Repository/auth.repository";
 
 export const autenticarUsuario = async (user:iUsuario, contrasenaLogin:string) => {
     //Se valida la contrasena contra la hallada en base de datos
@@ -45,5 +45,14 @@ export const generarTokens = (user:iUsuario):iTokensAcceso => {
     return {
         accessToken : acessToken,
         refreshToken : refreshToken
+    }
+}
+
+export const guardarTokenUsuario = async (user:iUsuario, token:string, tipo_token:('ACCESS' | 'REFRESH'), ip:string, user_agent:string, fecha_expiracion_token:Date) => {
+    const authRepository:AuthRepository = new AuthRepository();
+    try{
+        authRepository.guardarTokenUsuario(user,token,tipo_token,ip,user_agent,fecha_expiracion_token);
+    }catch(error){
+        throw new Error('Error validando el usuario. ' + error);
     }
 }
