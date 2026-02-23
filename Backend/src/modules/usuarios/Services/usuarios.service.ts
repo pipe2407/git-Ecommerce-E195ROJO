@@ -1,5 +1,8 @@
 import { UsuariosRepository } from "../Repository/usuarios.repository";
-import { iCrearUsuario } from "../Models/usuarios.model";
+import { iCrearUsuario, iUsuario } from "../Models/usuarios.model";
+import { iLogin } from "../Models/usuarios.model";
+import { autenticarUsuario } from "../../Auth/Services/auth.service";
+import { iTokensAcceso } from "../../Auth/Models/auth.model";
 
 export class UsuariosService {
     private usuariosRepository: UsuariosRepository;
@@ -29,10 +32,16 @@ export class UsuariosService {
     }
 
     // Servicio para login de usuario
-    async loginUsuario(credentials: any) {
+    async loginUsuario(credentials: iLogin):Promise<iTokensAcceso> {
         try {
-            const resultado = await this.usuariosRepository.loginUsuario(credentials);
-            return resultado;
+            //Consulta si el usuario existe en base de datos
+            const usuario:iUsuario | null = await this.usuariosRepository.consultarUsuario(credentials.email);
+            if(usuario == null){
+                throw new Error('Credenciales invalidas');
+            }else{
+                const resultAutenticacion:iTokensAcceso = await autenticarUsuario(usuario, credentials.contrasena);
+                return resultAutenticacion;
+            }
         } catch (error: any) {
             throw new Error(error.message || "Error al autenticar usuario en el servicio");
         }

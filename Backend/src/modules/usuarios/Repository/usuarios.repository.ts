@@ -1,36 +1,33 @@
-import { PrismaClientOptions } from "@prisma/client/runtime/client";
-import { PrismaClient } from "../../../generated/prisma/client";
+import { hash } from "bcrypt";
 import { iCrearUsuario } from "../Models/usuarios.model";
 import { env } from "../../../config/env";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { prismaClient } from "../../../prisma/prisma.client";
 
 export class UsuariosRepository {
-    prismaClient: PrismaClient;
+    prismaClient = prismaClient;
     
-    constructor() {
-        const pool = new Pool({
-            connectionString: env.DB_URL
-        });
-        const adapter = new PrismaPg(pool);
-        this.prismaClient = new PrismaClient({ adapter });
-    }
+    constructor() {}
 
     // Repositorio para crear usuario
     async crearUsuario(data: iCrearUsuario) {
         try{
+            const passwordPlano = data.contrasena;
+            const saltRounds = env.saltos_encriptacion;
+            const passwordHasheada = await hash(passwordPlano, saltRounds); 
+
             const resultCreacion = await this.prismaClient.usuarios.create({
                 data: {
                     usuario_crea_fk: data.usuario_crea_fk,
                     usuario_modifica_fk: data.usuario_modifica_fk,
-                    nombre_usuario: data.nombre_usuario,
+                    fecha_crea: new Date(),
+                    fecha_modifica: new Date(),
                     primer_nombre: data.primer_nombre,
                     segundo_nombre: data.segundo_nombre,
                     primer_apellido: data.primer_apellido, 
                     segundo_apellido: data.segundo_apellido,
                     numero_identificacion: data.numero_identificacion, 
                     email: data.email,
-                    contrasena: data.contrasena,
+                    contrasena: passwordHasheada,
                 }
             });
             return resultCreacion;
@@ -41,9 +38,12 @@ export class UsuariosRepository {
     }
 
     // Repositorio para consultar usuario
-    async consultarUsuario(params: any) {
+    async consultarUsuario(email: string){
         try {
-            return { mensaje: "Usuario consultado", params };
+            const resultConsulta = await this.prismaClient.usuarios.findUnique({
+                where: {email}
+            });
+            return resultConsulta;
         } catch (error: any) {
             console.log("error consultando usuario:" + error);
             throw new Error('Error consultando el usuario.');
