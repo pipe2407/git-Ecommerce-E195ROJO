@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UsuariosService } from "../Services/usuarios.service";
 import { iTokensAcceso } from "../../Auth/Models/auth.model";
+import { env } from "../../../config/env";
+import strict from "node:assert/strict";
 
 const usuariosService = new UsuariosService();
 
@@ -44,7 +46,13 @@ export const loginUsuario = async (request: Request, response: Response) => {
         const user_agent: string = request.headers['user-agent']?.toString() || 'unknown';
 
         const resultado:iTokensAcceso = await usuariosService.loginUsuario(request.body, ip , user_agent);
-        response.status(200).json(resultado);
+        response.status(200)
+        .cookie("refresh_token", resultado.refreshToken, {
+            httpOnly: true,
+            secure: env.ENVIRONMENT == 'production',
+            sameSite: "strict"
+        })
+        .json({ "access_token" : resultado.accessToken});
     } catch (error: any) {
         response.status(401).json({ 
             error: "Error al autenticar usuario", 

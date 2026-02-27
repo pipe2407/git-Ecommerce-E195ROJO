@@ -1,18 +1,21 @@
 import { compare } from "bcrypt";
 import { SignOptions, sign } from "jsonwebtoken";
 import { iUsuario } from "../../usuarios/Models/usuarios.model";
-import { iTokensAcceso } from "../Models/auth.model";
+import { iRolesPermisos, iTokensAcceso, payloadTokenUser } from "../Models/auth.model";
 import { env } from "../../../config/env";
 import { AuthRepository } from "../Repository/auth.repository";
 
 export const autenticarUsuario = async (user:iUsuario, contrasenaLogin:string) => {
     //Se valida la contrasena contra la hallada en base de datos
     const contrasenaBD = user.contrasena;
+    const authRepository:AuthRepository = new AuthRepository();
 
     try{
         if(await compare(contrasenaLogin,contrasenaBD)){
-            //Generacion de tokens de sesion
-            return generarTokens(user);
+            //Consulta de los permisos asociados al usuario
+            let permisosUsuario:iRolesPermisos = await authRepository.consultarRolesUsuario(user);
+            //Generacion de tokens de sesion    
+            return generarTokens(user, permisosUsuario);
         }else{
             throw new Error('Credenciales invalidas');
         }
@@ -22,16 +25,18 @@ export const autenticarUsuario = async (user:iUsuario, contrasenaLogin:string) =
 }
 
 
-export const generarTokens = (user:iUsuario):iTokensAcceso => {
-    const payloadToken = {
+export const generarTokens = (user:iUsuario, permisos:iRolesPermisos):iTokensAcceso => {
+    const payloadToken: payloadTokenUser = {
         nombre_usuario : user.primer_nombre + " " + user.segundo_nombre + " " + user.primer_apellido + " " + user.segundo_apellido,
         identificacion : user.numero_identificacion,
-        roles: [],
-        permisos: []
+        permisos: null
     }
 
+    let payloadTokenAcess = payloadToken;
+    payloadToken.permisos = permisos;
+
     const acessToken = sign(
-        payloadToken, 
+        payloadTokenAcess,
         env.FIRMA_ACCESS_TOKEN,
         { expiresIn: env.ACCESS_TOKEN_DURATION as SignOptions["expiresIn"] }
     );
