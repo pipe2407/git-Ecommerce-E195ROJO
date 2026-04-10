@@ -1,0 +1,8 @@
+/* Estilos globales de la aplicación */
+/* Se prefiere usar index.css para bases y variables. */
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
