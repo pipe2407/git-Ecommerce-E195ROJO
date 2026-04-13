@@ -1,60 +1,75 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+// Router principal — conecta todos los módulos del backlog EC-001 → EC-010
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Importación de módulos (Muestras)
-import RegisterPage from '../../modules/auth/pages/RegisterPage';
-import LoginPage from '../../modules/auth/pages/LoginPage';
-import CatalogPage from '../../modules/catalog/pages/CatalogPage';
+// Home
+import HomePage from '../../pages/HomePage';
+
+// Auth
+import LoginPage          from '../../modules/auth/pages/LoginPage';
+import RegisterPage       from '../../modules/auth/pages/RegisterPage';
+import ForgotPasswordPage from '../../modules/auth/pages/ForgotPasswordPage';
+
+// Catalog
+import CatalogPage       from '../../modules/catalog/pages/CatalogPage';
 import ProductDetailPage from '../../modules/catalog/pages/ProductDetailPage';
-import CheckoutPage from '../../modules/checkout/pages/CheckoutPage';
-import HistoryPage from '../../modules/account/pages/HistoryPage';
-import PublishPage from '../../modules/publisher/pages/PublishPage';
-import ManagementPage from '../../modules/publisher/pages/ManagementPage';
-import ReportsPage from '../../modules/admin/pages/ReportsPage';
+import CartPage          from '../../modules/catalog/pages/CartPage';
 
-// Componente de Bienvenida (Dashboard simple)
-const Home = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>¡Bienvenido a la Plataforma E-Commerce!</h1>
-    <p>Selecciona un módulo para empezar a trabajar:</p>
-    
-    <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '1rem' }}>
-      <Link to="/register"><button>EC-001 Registro</button></Link>
-      <Link to="/login"><button>EC-002 Login</button></Link>
-      <Link to="/catalog"><button>EC-004 Catálogo</button></Link>
-      <Link to="/checkout"><button>EC-006 Checkout</button></Link>
-      <Link to="/orders"><button>EC-007 Historial</button></Link>
-      <Link to="/publish"><button>EC-008 Publicar</button></Link>
-      <Link to="/admin/reports"><button>EC-010 Informes</button></Link>
-    </nav>
-  </div>
-);
+// Checkout
+import CheckoutPage from '../../modules/checkout/pages/CheckoutPage';
+
+// Account
+import HistoryPage from '../../modules/account/pages/HistoryPage';
+
+// Publisher (Vendedor)
+import PublishPage    from '../../modules/publisher/pages/PublishPage';
+import ManagementPage from '../../modules/publisher/pages/ManagementPage';
+
+// Admin
+import ReportsPage from '../../modules/admin/pages/ReportsPage';
+import UserManagementPage from '../../modules/admin/pages/UserManagementPage';
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        
-        {/* Rutas de Auth */}
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        
-        {/* Rutas de Catálogo */}
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        
-        {/* Rutas de Checkout */}
+        {/* Home / Landing */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* ─ Auth ─────────────────────────────── */}
+        <Route path="/register"        element={<RegisterPage />} />
+        <Route path="/login"           element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+        {/* ─ Catálogo ─────────────────────────── */}
+        <Route path="/catalog"       element={<CatalogPage />} />
+        <Route path="/product/:id"   element={<ProductDetailPage />} />
+        <Route path="/cart"          element={<CartPage />} />
+
+        {/* ─ Checkout ─────────────────────────── */}
         <Route path="/checkout" element={<CheckoutPage />} />
-        
-        {/* Rutas de Cuenta */}
+
+        {/* ─ Cuenta ───────────────────────────── */}
         <Route path="/orders" element={<HistoryPage />} />
-        
-        {/* Rutas de Vendedor */}
-        <Route path="/publish" element={<PublishPage />} />
-        <Route path="/my-listings" element={<ManagementPage />} />
-        
-        {/* Rutas de Admin */}
+
+        {/* ─ Vendedor ─────────────────────────── */}
+        <Route path="/publish"     element={<PublishPage />} />
+        <Route path="/management"  element={<ManagementPage />} />
+
+        {/* ─ Admin ────────────────────────────── */}
         <Route path="/admin/reports" element={<ReportsPage />} />
+        <Route path="/admin/users"   element={<UserManagementPage />} />
+
+        {/* 404 fallback */}
+        <Route path="*" element={
+          <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+            <div className="text-8xl mb-6">🚀</div>
+            <h1 className="text-5xl font-extrabold text-white mb-3" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              404
+            </h1>
+            <p className="text-xl text-slate-400 mb-8">Esta página no existe o fue movida.</p>
+            <a href="/" className="btn-primary px-8 py-3.5">Ir al inicio</a>
+          </div>
+        } />
       </Routes>
     </BrowserRouter>
   );
