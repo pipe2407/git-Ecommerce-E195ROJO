@@ -1,7 +1,5 @@
-// Punto de entrada de la aplicación.
-// Aquí se monta el router principal que conecta todos los módulos.
-// Ver: src/core/router/AppRouter.tsx
-
+// App.tsx — Punto de entrada único
+// El router conecta todos los módulos del backlog EC-001 → EC-010
 import AppRouter from './core/router/AppRouter.tsx';
 
 function App() {
